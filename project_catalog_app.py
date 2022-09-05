@@ -183,11 +183,12 @@ with col2:
     st.write('---')
 
 #-----------------Show Data Frame--------------------
-def showDataframe(df):
+def showDataframe(df, flag=0):
     df = df.replace(r'^\s*$', "No Details Available", regex=True)
     i = 0
     for ind in df.index:
-        st.write("Showing result for similar word '"+df["SIMILAR_WORD"][ind].strip(",")+"'")
+        if flag==1:
+            st.write("Showing result for similar word '"+df["SIMILAR_WORD"][ind].strip(",")+"'")
 
         i += 1
         for col in client_df.columns.to_list():
@@ -319,11 +320,11 @@ elif choose == "Search":
             st.write('##')
             if not filtered_client_df.empty:
                 st.markdown("#### Client Projects")
-                showDataframe(filtered_client_df)
+                showDataframe(filtered_client_df, 1)
 
             if not filtered_kipistone_df.empty:
                 st.markdown("#### KipiStone Projects")
-                showDataframe(filtered_kipistone_df)
+                showDataframe(filtered_kipistone_df, 1)
 
             if filtered_client_df.empty & filtered_kipistone_df.empty:
                 st.error("No result found for the search!")
