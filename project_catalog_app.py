@@ -193,7 +193,7 @@ def showDataframe(df, flag=0):
         i += 1
         for col in client_df.columns.to_list():
             if col == 'PROJECT_NAME':
-                st.markdown("##### <u>"+ str(i)+ ". " +col.replace('_', ' ')+ ": "+str(df[col][ind]).replace("\n"," "), unsafe_allow_html=True)
+                st.markdown("##### <u>"+ str(i)+ ". " +col.replace('_', ' ')+ ": "+str(df[col][ind]).replace("\n"," ").title(), unsafe_allow_html=True)
             
             elif col == 'CASE_STUDY':
                 if str(df[col][ind]).strip() == "No Details Available":
@@ -207,7 +207,7 @@ def showDataframe(df, flag=0):
                 else:
                     st.write("* REFERENCE ARCHITECTURES : [link]("+ str(df[col][ind]).strip()+")")
 
-            elif col not in ['TECHNOLOGY', 'TAG_TECHNOLOGY', 'KEYWORDS', 'SIMILARITY_SCORE', 'SIMILARITY_CHECK', 'SIMILAR_WORD']:
+            elif col not in ['TECHNOLOGY', 'TAG_TECHNOLOGY', 'KEYWORDS', 'SIMILARITY_SCORE', 'SIMILARITY_CHECK', 'SIMILAR_WORD', 'OTHERS']:
                 st.write("* "+col.replace('_', ' ')+" : ",str(df[col][ind]).replace("\n",", "))
 
         st.write(" ")
