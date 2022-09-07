@@ -244,6 +244,7 @@ if choose=="Domain":
             if not filtered_client_df_1.empty:
                 st.markdown("#### Client Projects")
                 showDataframe(filtered_client_df_1)
+                st.write('---')
                 
             if not filtered_kipistone_df_1.empty:
                 st.markdown("#### KipiStone Projects")
@@ -272,6 +273,7 @@ elif choose == "Technology":
             if not filtered_client_df_2.empty:
                 st.markdown("#### Client Projects")
                 showDataframe(filtered_client_df_2)
+                st.write('---')
                 
             if not filtered_kipistone_df_2.empty:
                 st.markdown("#### KipiStone Projects")
@@ -286,22 +288,21 @@ elif choose == "Search":
             client_df_1 = pd.DataFrame(client_df['OTHERS'])
             client_df_1['SEARCHED_STRING'] = searched_string
             client_df_1 = st.session_state.session.create_dataframe(client_df_1)
-            client_df_1.create_or_replace_temp_view('client_temp_view')
+            client_df_1.write.mode("overwrite").save_as_table('client_temp_table', table_type="temporary")
             
             
-            df = st.session_state.session.sql(f"select find_all_tokens(OTHERS, SEARCHED_STRING) from (select * from client_temp_view)").to_pandas()
+            df = st.session_state.session.sql(f"select find_all_tokens(OTHERS, SEARCHED_STRING) from (select * from client_temp_table)").to_pandas()
             final_df = [{'matched_tokens':row[column].split('|')[0], 'similarity_score':int(row[column].split('|')[1])} for indices, row in df.iterrows() for column in df.columns]
             final_df = pd.DataFrame(final_df)
-            print(final_df)
             return final_df
 
         else:
             kipistone_df_1 = pd.DataFrame(kipistone_df['OTHERS'])
             kipistone_df_1['SEARCHED_STRING'] = searched_string
             kipistone_df_1 = st.session_state.session.create_dataframe(kipistone_df_1)
-            kipistone_df_1.create_or_replace_temp_view('kipistone_temp_view')
+            kipistone_df_1.write.mode("overwrite").save_as_table('kipistone_temp_table', table_type="temporary")
             
-            df = st.session_state.session.sql(f"select find_all_tokens(OTHERS, SEARCHED_STRING) from (select * from kipistone_temp_view)").to_pandas()
+            df = st.session_state.session.sql(f"select find_all_tokens(OTHERS, SEARCHED_STRING) from (select * from kipistone_temp_table)").to_pandas()
             final_df = [{'matched_tokens':row[column].split('|')[0], 'similarity_score':int(row[column].split('|')[1])} for indices, row in df.iterrows() for column in df.columns]
             final_df = pd.DataFrame(final_df)
             return final_df
@@ -321,10 +322,12 @@ elif choose == "Search":
             if not filtered_client_df.empty:
                 st.markdown("#### Client Projects")
                 showDataframe(filtered_client_df, 1)
+                st.write('---')
 
             if not filtered_kipistone_df.empty:
                 st.markdown("#### KipiStone Projects")
                 showDataframe(filtered_kipistone_df, 1)
+                st.write('---')
 
             if filtered_client_df.empty & filtered_kipistone_df.empty:
                 st.error("No result found for the search!")
